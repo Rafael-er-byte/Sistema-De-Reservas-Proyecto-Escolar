@@ -9,7 +9,7 @@ namespace SistemaDeReservas
 {
     public partial class MenuView : Form
     {
-        private ItemController controller;
+        private readonly ItemController controller;
         private Font cardFont = new Font("Segoe UI", 11);
 
         public MenuView(ItemController controller)
@@ -21,18 +21,30 @@ namespace SistemaDeReservas
 
         private void buscarItemBtn_Click(object sender, EventArgs e)
         {
-            string param = itemParametroDeBusquedaTxt.Text.Trim();
+            try
+            {
+                string param = itemParametroDeBusquedaTxt.Text.Trim();
 
-            int id = 0;
-            string nameLike = null;
+                int id = 0;
+                string nameLike = null;
 
-            if (int.TryParse(param, out int parsedId))
-                id = parsedId;
-            else if (!string.IsNullOrWhiteSpace(param))
-                nameLike = param;
+                if (int.TryParse(param, out int parsedId))
+                    id = parsedId;
+                else if (!string.IsNullOrWhiteSpace(param))
+                    nameLike = param;
 
-            var items = controller.Search(id, nameLike);
-            RenderItems(items);
+                var items = controller.Search(id, nameLike);
+                RenderItems(items);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Error al buscar ítems",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void agregarItemBtn_Click(object sender, EventArgs e)
@@ -43,8 +55,20 @@ namespace SistemaDeReservas
 
         public void Update()
         {
-            var items = controller.Search(0, null);
-            RenderItems(items);
+            try
+            {
+                var items = controller.Search(0, null);
+                RenderItems(items);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Error al cargar el menú",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void RenderItems(List<Item> items)
@@ -72,7 +96,6 @@ namespace SistemaDeReservas
             Label nameLbl = new Label
             {
                 Text = "Nombre",
-                Font = labelFont,
                 Location = new Point(15, 18),
                 Width = 90
             };
@@ -88,7 +111,6 @@ namespace SistemaDeReservas
             Label descLbl = new Label
             {
                 Text = "Descripción",
-                Font = labelFont,
                 Location = new Point(15, 58),
                 Width = 90
             };
@@ -104,7 +126,6 @@ namespace SistemaDeReservas
             Label priceLbl = new Label
             {
                 Text = "Precio",
-                Font = labelFont,
                 Location = new Point(15, 98),
                 Width = 90
             };
@@ -138,32 +159,66 @@ namespace SistemaDeReservas
                 Height = 36
             };
 
+            // ✏️ Editar ítem
             editBtn.Click += (s, e) =>
             {
-                controller.Update(
-                    item.Id,
-                    nameTxt.Text,
-                    descTxt.Text,
-                    decimal.Parse(priceTxt.Text)
-                );
+                try
+                {
+                    controller.Update(
+                        item.Id,
+                        nameTxt.Text,
+                        descTxt.Text,
+                        decimal.Parse(priceTxt.Text)
+                    );
 
-                Update();
+                    Update();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show(
+                        "El precio debe ser un número válido.",
+                        "Dato inválido",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "Error al actualizar ítem",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
             };
 
+            // 🗑 Eliminar ítem
             deleteBtn.Click += (s, e) =>
             {
-                controller.Delete(item.Id);
-                Update();
+                try
+                {
+                    controller.Delete(item.Id);
+                    Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "No se pudo eliminar el ítem",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
             };
 
-            card.Controls.Add(nameLbl);
-            card.Controls.Add(nameTxt);
-            card.Controls.Add(descLbl);
-            card.Controls.Add(descTxt);
-            card.Controls.Add(priceLbl);
-            card.Controls.Add(priceTxt);
-            card.Controls.Add(editBtn);
-            card.Controls.Add(deleteBtn);
+            card.Controls.AddRange(new Control[]
+            {
+                nameLbl, nameTxt,
+                descLbl, descTxt,
+                priceLbl, priceTxt,
+                editBtn, deleteBtn
+            });
 
             return card;
         }

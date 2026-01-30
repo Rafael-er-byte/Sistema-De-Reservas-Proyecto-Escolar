@@ -173,18 +173,40 @@ namespace SistemaDeReservas.Repository
 
             const string query = "DELETE FROM Item WHERE id = @id";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
+            try
             {
-                command.Parameters.AddWithValue("@id", id);
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
 
-                connection.Open();
-                int rows = command.ExecuteNonQuery();
+                    connection.Open();
+                    int rows = command.ExecuteNonQuery();
+                    connection.Close();
+
+                    if (rows == 0)
+                        throw new InvalidOperationException("No se encontró el ítem para eliminar.");
+                }
+            }
+            catch (SqlException ex)
+            {
                 connection.Close();
 
-                if (rows == 0)
-                    throw new InvalidOperationException("No se encontró el ítem para eliminar.");
+                // 🔒 Violación de clave foránea
+                if (ex.Number == 547)
+                {
+                    throw new InvalidOperationException(
+                        "No se puede eliminar el ítem porque está siendo usado en uno o más pedidos."
+                    );
+                }
+
+                // Otro error SQL
+                throw new InvalidOperationException(
+                    "Ocurrió un error al intentar eliminar el ítem.",
+                    ex
+                );
             }
         }
+
 
         public List<Item> GetAll()
         {

@@ -44,18 +44,40 @@ namespace SistemaDeReservas.Repository
 
             const string query = "DELETE FROM Schedule WHERE id = @id";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
+            try
             {
-                command.Parameters.AddWithValue("@id", id);
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
 
-                connection.Open();
-                int rows = command.ExecuteNonQuery();
+                    connection.Open();
+                    int rows = command.ExecuteNonQuery();
+                    connection.Close();
+
+                    if (rows == 0)
+                        throw new InvalidOperationException("No se encontró el horario para eliminar.");
+                }
+            }
+            catch (SqlException ex)
+            {
                 connection.Close();
 
-                if (rows == 0)
-                    throw new InvalidOperationException("No se encontró el horario para eliminar.");
+                // 🔒 Violación de clave foránea (FK)
+                if (ex.Number == 547)
+                {
+                    throw new InvalidOperationException(
+                        "No se puede eliminar el horario porque está siendo usado en una o más reservaciones."
+                    );
+                }
+
+                // Cualquier otro error de SQL
+                throw new InvalidOperationException(
+                    "Ocurrió un error al intentar eliminar el horario.",
+                    ex
+                );
             }
         }
+
 
         // Obtener todos los horarios
         public List<Schedule> GetAll()

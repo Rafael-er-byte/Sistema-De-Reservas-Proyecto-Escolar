@@ -72,8 +72,20 @@ namespace SistemaDeReservas
 
             deleteBtn.Click += (s, e) =>
             {
-                controller.Delete(schedule.Id);
-                Update();
+                try
+                {
+                    controller.Delete(schedule.Id);
+                    Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "Error al eliminar horario",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
             };
 
             card.Controls.Add(timeLbl);
@@ -81,5 +93,6 @@ namespace SistemaDeReservas
 
             return card;
         }
+
     }
 }

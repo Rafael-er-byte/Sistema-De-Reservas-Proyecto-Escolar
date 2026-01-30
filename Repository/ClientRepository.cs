@@ -134,18 +134,40 @@ namespace SistemaDeReservas.Repository
 
             const string query = "DELETE FROM Client WHERE id = @id";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
+            try
             {
-                command.Parameters.AddWithValue("@id", id);
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
 
-                connection.Open();
-                int rows = command.ExecuteNonQuery();
-                connection.Close();
+                    connection.Open();
+                    int rows = command.ExecuteNonQuery();
+                    connection.Close();
 
-                if (rows == 0)
-                    throw new InvalidOperationException("No se encontró el cliente para eliminar.");
+                    if (rows == 0)
+                        throw new InvalidOperationException("No se encontró el cliente para eliminar.");
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Error 547 = violación de FOREIGN KEY
+                if (ex.Number == 547)
+                {
+                    throw new InvalidOperationException(
+                        "No se puede eliminar el cliente porque está siendo utilizado en reservas u órdenes."
+                    );
+                }
+
+                // Cualquier otro error de SQL
+                throw;
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                    connection.Close();
             }
         }
+
 
         public List<Client> GetAll()
         {

@@ -9,30 +9,42 @@ namespace SistemaDeReservas
 {
     public partial class ClienteView : Form
     {
-        private ClientController controller;
+        private readonly ClientController controller;
         private Font cardFont = new Font("Segoe UI", 11);
 
         public ClienteView(ClientController controller)
         {
             InitializeComponent();
             this.controller = controller;
-            this.Update();
+            Update();
         }
 
         private void buscarClienteBtn_Click(object sender, EventArgs e)
         {
-            string param = clienteParametroDeBusquedaTxt.Text.Trim();
+            try
+            {
+                string param = clienteParametroDeBusquedaTxt.Text.Trim();
 
-            int id = 0;
-            string nameLike = null;
+                int id = 0;
+                string nameLike = null;
 
-            if (int.TryParse(param, out int parsedId))
-                id = parsedId;
-            else if (!string.IsNullOrWhiteSpace(param))
-                nameLike = param;
+                if (int.TryParse(param, out int parsedId))
+                    id = parsedId;
+                else if (!string.IsNullOrWhiteSpace(param))
+                    nameLike = param;
 
-            var clients = controller.Search(id, nameLike);
-            RenderClients(clients);
+                var clients = controller.Search(id, nameLike);
+                RenderClients(clients);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Error al buscar clientes",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void agregarClienteBtn_Click(object sender, EventArgs e)
@@ -43,8 +55,20 @@ namespace SistemaDeReservas
 
         public void Update()
         {
-            var clients = controller.Search(0, null);
-            RenderClients(clients);
+            try
+            {
+                var clients = controller.Search(0, null);
+                RenderClients(clients);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Error al cargar clientes",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void RenderClients(List<Client> clients)
@@ -67,12 +91,11 @@ namespace SistemaDeReservas
                 Margin = new Padding(12)
             };
 
-            Font labelFont = new Font("Segoe UI", 10, FontStyle.Regular);
+            Font labelFont = new Font("Segoe UI", 10);
 
             Label nameLbl = new Label
             {
                 Text = "Nombre",
-                Font = labelFont,
                 Location = new Point(15, 18),
                 Width = 80
             };
@@ -88,7 +111,6 @@ namespace SistemaDeReservas
             Label telLbl = new Label
             {
                 Text = "Teléfono",
-                Font = labelFont,
                 Location = new Point(15, 58),
                 Width = 80
             };
@@ -104,7 +126,6 @@ namespace SistemaDeReservas
             Label mailLbl = new Label
             {
                 Text = "Correo",
-                Font = labelFont,
                 Location = new Point(15, 98),
                 Width = 80
             };
@@ -138,32 +159,57 @@ namespace SistemaDeReservas
                 Height = 36
             };
 
+            // ✏️ Editar cliente
             editBtn.Click += (s, e) =>
             {
-                controller.Update(
-                    client.Id,
-                    nameTxt.Text,
-                    telTxt.Text,
-                    mailTxt.Text
-                );
+                try
+                {
+                    controller.Update(
+                        client.Id,
+                        nameTxt.Text,
+                        telTxt.Text,
+                        mailTxt.Text
+                    );
 
-                Update();
+                    Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "Error al actualizar cliente",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
             };
 
+            // 🗑 Eliminar cliente
             deleteBtn.Click += (s, e) =>
             {
-                controller.Delete(client.Id);
-                Update();
+                try
+                {
+                    controller.Delete(client.Id);
+                    Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "No se pudo eliminar el cliente",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
             };
 
-            card.Controls.Add(nameLbl);
-            card.Controls.Add(nameTxt);
-            card.Controls.Add(telLbl);
-            card.Controls.Add(telTxt);
-            card.Controls.Add(mailLbl);
-            card.Controls.Add(mailTxt);
-            card.Controls.Add(editBtn);
-            card.Controls.Add(deleteBtn);
+            card.Controls.AddRange(new Control[]
+            {
+                nameLbl, nameTxt,
+                telLbl, telTxt,
+                mailLbl, mailTxt,
+                editBtn, deleteBtn
+            });
 
             return card;
         }
