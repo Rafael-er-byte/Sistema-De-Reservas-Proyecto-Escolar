@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{21E0263B-C5E4-4B1B-AC4B-FFB2E1B2C628}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SistemaDeReservas</RootNamespace>
+    <AssemblyName>SistemaDeReservas</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config\Db.cs" />
+    <Compile Include="Controller\ClientController.cs" />
+    <Compile Include="Controller\ItemController.cs" />
+    <Compile Include="Controller\OrderController.cs" />
+    <Compile Include="Controller\ReservationController.cs" />
+    <Compile Include="Controller\ScheduleController.cs" />
+    <Compile Include="ClienteView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClienteView.Designer.cs">
+      <DependentUpon>ClienteView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateClientView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateClientView.Designer.cs">
+      <DependentUpon>CreateClientView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateItemView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateItemView.Designer.cs">
+      <DependentUpon>CreateItemView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateOrderView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateOrderView.Designer.cs">
+      <DependentUpon>CreateOrderView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateReservationView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateReservationView.Designer.cs">
+      <DependentUpon>CreateReservationView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateScheduleView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateScheduleView.Designer.cs">
+      <DependentUpon>CreateScheduleView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MenuView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MenuView.Designer.cs">
+      <DependentUpon>MenuView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\Order.cs" />
+    <Compile Include="Model\Client.cs" />
+    <Compile Include="Model\OrderCriteria.cs" />
+    <Compile Include="Model\Reservation.cs" />
+    <Compile Include="Model\ReservationCriteria.cs" />
+    <Compile Include="Model\Schedule.cs" />
+    <Compile Include="Model\SearchClientCriteria.cs" />
+    <Compile Include="Model\SearchItemCriteria.cs" />
+    <Compile Include="OrderView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OrderView.Designer.cs">
+      <DependentUpon>OrderView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ClientRepository.cs" />
+    <Compile Include="Repository\ItemRepository.cs" />
+    <Compile Include="Repository\OrderRepository.cs" />
+    <Compile Include="Repository\ReservationRepository.cs" />
+    <Compile Include="Repository\ScheduleRepository.cs" />
+    <Compile Include="ReservationView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReservationView.Designer.cs">
+      <DependentUpon>ReservationView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScheduleView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScheduleView.Designer.cs">
+      <DependentUpon>ScheduleView.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ClienteView.resx">
+      <DependentUpon>ClienteView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateClientView.resx">
+      <DependentUpon>CreateClientView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateItemView.resx">
+      <DependentUpon>CreateItemView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateOrderView.resx">
+      <DependentUpon>CreateOrderView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateReservationView.resx">
+      <DependentUpon>CreateReservationView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateScheduleView.resx">
+      <DependentUpon>CreateScheduleView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MenuView.resx">
+      <DependentUpon>MenuView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderView.resx">
+      <DependentUpon>OrderView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ReservationView.resx">
+      <DependentUpon>ReservationView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScheduleView.resx">
+      <DependentUpon>ScheduleView.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
